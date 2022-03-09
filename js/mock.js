@@ -1,7 +1,5 @@
 import {getRandomNumber, getRandomArrayElement} from './utils.js';
 
-// const NUMBER_OF_OFFERS = 25;
-
 const DESCRIPTION = 'Это какое то описание';
 
 const LIST_OF_COMMENTATORS = [
