@@ -1,6 +1,6 @@
-import {getRandomNumber, getRandomArrayElement} from './util.js';
+import {getRandomNumber, getRandomArrayElement} from './utils.js';
 
-const NUMBER_OF_OFFERS = 25;
+// const NUMBER_OF_OFFERS = 25;
 
 const DESCRIPTION = 'Это какое то описание';
 
@@ -26,19 +26,19 @@ const LIST_OF_COMMENTS = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!',
 ];
 
-const createObject = (index) => ({
+const createObject = (item, index) => ({
   id: index + 1,
   url: `photos/${index + 1}.jpg`,
   description: DESCRIPTION,
   likes: getRandomNumber(15, 200),
-  comments: {
+  comments: [{
     id: index + 1,
     avatar: `img/avatar-${getRandomNumber(1, 6)}.svg`,
     message: getRandomArrayElement(LIST_OF_COMMENTS),
     name: getRandomArrayElement(LIST_OF_COMMENTATORS)
-  }
+  }]
 });
 
-const createNewPhoto = Array.from({length: NUMBER_OF_OFFERS}).map((value, idx) => createObject(idx));
+const getUsersPhotos = (count) => Array.from({length: count}, createObject);
 
-export {createNewPhoto};
+export {getUsersPhotos};
