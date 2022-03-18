@@ -39,14 +39,16 @@ const createObject = (item, index) => ({
 
 const getUsersPhotos = (count) => Array.from({length: count}, createObject);
 
+const collectionOfPhotos = getUsersPhotos(25);
 
-const addUsersPhotos = (listItem) => {
+const addUsersPhotos = (list) => {
   const listOfPhotos = document.querySelector('.pictures');
   const template = document.querySelector('#picture').content.querySelector('.picture');
   const fragmentOfPhotos = document.createDocumentFragment();
 
-  listItem.forEach(({url, likes, comments}) => {
+  list.forEach(({id, url, likes, comments}) => {
     const photoElement = template.cloneNode(true);
+    photoElement.id = id;
     photoElement.querySelector('.picture__img').src = url;
     photoElement.querySelector('.picture__likes').textContent = likes;
     photoElement.querySelector('.picture__comments').textContent = comments.length;
@@ -56,4 +58,4 @@ const addUsersPhotos = (listItem) => {
   listOfPhotos.appendChild(fragmentOfPhotos);
 };
 
-export {getUsersPhotos, addUsersPhotos};
+export {getUsersPhotos, addUsersPhotos, collectionOfPhotos};
