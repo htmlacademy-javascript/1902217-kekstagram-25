@@ -52,9 +52,9 @@ function closePopup () {
 }
 
 const onPopupClick = (evt) => {
-  evt.preventDefault();
   if (evt.target.matches('.picture__img')) {
     const target = evt.target.closest('.picture');
+    evt.preventDefault();
     const itemFromCollection = collectionOfPhotos.find((item) => item.id === Number(target.id));
     openPopup(itemFromCollection);
   }
