@@ -9,17 +9,23 @@ function getRandomNumber(a, b) {
 }
 
 // Проверка длины строки
-const toCheckString = (verifiableString, maxString) => verifiableString.length <= maxString;
+function toCheckString(verifiableString, maxString) {
+  return verifiableString.length <= maxString;
+}
 
 // Случаный элемент массива
-const getRandomArrayElement = (elements) => elements[getRandomNumber(0, elements.length - 1)];
+function getRandomArrayElement(elements) {
+  return elements[getRandomNumber(0, elements.length - 1)];
+}
 
 // Нажат эскейп
-const isEscPressed = (evt) => evt.key === 'Escape';
+function isEscPressed(evt) {
+  return evt.key === 'Escape';
+}
 
 // Перехват события
-const stopPropagation = (evt) => {
+function stopPropagation(evt) {
   evt.stopPropagation();
-};
+}
 
 export {getRandomNumber, getRandomArrayElement, isEscPressed, toCheckString, stopPropagation};

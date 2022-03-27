@@ -24,31 +24,39 @@ const LIST_OF_COMMENTS = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!',
 ];
 
-const createComments = (item, index) => ({
-  id: index + 1,
-  avatar: `img/avatar-${getRandomNumber(1, 6)}.svg`,
-  message: getRandomArrayElement(LIST_OF_COMMENTS),
-  name: getRandomArrayElement(LIST_OF_COMMENTATORS)
-});
+// Создание рандомного объекта комментария
+function createComments(item, index) {
+  return ({
+    id: index + 1,
+    avatar: `img/avatar-${getRandomNumber(1, 6)}.svg`,
+    message: getRandomArrayElement(LIST_OF_COMMENTS),
+    name: getRandomArrayElement(LIST_OF_COMMENTATORS)
+  });
+}
 
-const createObject = (item, index) => ({
-  id: index + 1,
-  url: `photos/${index + 1}.jpg`,
-  description: DESCRIPTION,
-  likes: getRandomNumber(15, 200),
-  comments:  Array.from({length: 11}, createComments)
-});
+// Создание рандомного объекта фотографии
+function createObject(item, index) {
+  return ({
+    id: index + 1,
+    url: `photos/${index + 1}.jpg`,
+    description: DESCRIPTION,
+    likes: getRandomNumber(15, 200),
+    comments: Array.from({ length: 11 }, createComments)
+  });
+}
 
+// Создание массива из заданного количества объектов с фотографиями
 const getUsersPhotos = (count) => Array.from({length: count}, createObject);
 
 const collectionOfPhotos = getUsersPhotos(25);
 
-const addUsersPhotos = (list) => {
+// Добавляет на страницу фотографии из массива
+function addUsersPhotos(list) {
   const listOfPhotos = document.querySelector('.pictures');
   const template = document.querySelector('#picture').content.querySelector('.picture');
   const fragmentOfPhotos = document.createDocumentFragment();
 
-  list.forEach(({id, url, likes, comments}) => {
+  list.forEach(({ id, url, likes, comments }) => {
     const photoElement = template.cloneNode(true);
     photoElement.id = id;
     photoElement.querySelector('.picture__img').src = url;
@@ -58,9 +66,8 @@ const addUsersPhotos = (list) => {
   });
 
   listOfPhotos.appendChild(fragmentOfPhotos);
-};
+}
 
-// -------------Добавляет коллекцию фото на страницу
 addUsersPhotos(collectionOfPhotos);
 
 export {collectionOfPhotos};
