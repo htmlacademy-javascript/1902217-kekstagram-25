@@ -1,7 +1,11 @@
-import {isEscPressed} from './utils.js';
 import {collectionOfPhotos} from './mock.js';
+import {isEscPressed} from './utils.js';
 
 const bigPhoto = document.querySelector('.big-picture');
+const bigPhotoImage = bigPhoto.querySelector('.big-picture__img').querySelector('img');
+const bigPhotoLikesCount = bigPhoto.querySelector('.likes-count');
+const bigPhotoCommentsCount = bigPhoto.querySelector('.comments-count');
+const bigPhotoDescription = bigPhoto.querySelector('.social__caption');
 const body = document.querySelector('body');
 const popupCloseButton = bigPhoto.querySelector('.big-picture__cancel');
 const popupComments = bigPhoto.querySelector('.social__comments');
@@ -10,11 +14,11 @@ const commentsLoaderButton = bigPhoto.querySelector('.social__comments-loader');
 const commentsShownCount = document.querySelector('.comments-show');
 
 // ----------Функция рендера большого фото
-const renderPopup = ({url, likes, comments, description}) => {
-  bigPhoto.querySelector('.big-picture__img').querySelector('img').src = url;
-  bigPhoto.querySelector('.likes-count').textContent = likes;
-  bigPhoto.querySelector('.comments-count').textContent = comments.length;
-  bigPhoto.querySelector('.social__caption').textContent = description;
+const renderPopup = ({ url, likes, comments, description }) => {
+  bigPhotoImage.src = url;
+  bigPhotoLikesCount.textContent = likes;
+  bigPhotoCommentsCount.textContent = comments.length;
+  bigPhotoDescription.textContent = description;
 };
 
 // Переменные для функций комментариев
@@ -22,8 +26,8 @@ let commentsArray = [];
 const COMMENTS_LIMIT = 5;
 
 // Функция рендера комментариев и их размещение под фото
-function renderComments(item) {
-  item.forEach(({ avatar, message, name }) => {
+const renderComments = (array) => {
+  array.forEach(({ avatar, message, name }) => {
     const popupComment = popupCommentClone.cloneNode(true);
     const author = popupComment.querySelector('.social__picture');
     const commentText = popupComment.querySelector('.social__text');
@@ -32,39 +36,37 @@ function renderComments(item) {
     commentText.textContent = message;
     popupComments.appendChild(popupComment);
   });
-}
-
-// Показывает кнопку Загрузить еще, и вешает обработчик добавления комментов
-function showLoadButton() {
-  commentsLoaderButton.classList.remove('hidden');
-  commentsLoaderButton.addEventListener('click', onLoadButtonClick);
-}
-
-// Скрывает кнопку Загрузить еще, и удаляет обработчик добавления комментов
-function hideLoadButton () {
-  commentsLoaderButton.classList.add('hidden');
-  commentsLoaderButton.removeEventListener('click', onLoadButtonClick);
-}
+};
 
 // Добавляет комментарии по 5 шт, также выводит количество показанных комментариев в поле
-function onLoadButtonClick () {
+const onLoadButtonClick = () => {
   if (commentsArray.length <= COMMENTS_LIMIT) {
-    hideLoadButton();
+    commentsLoaderButton.classList.add('hidden');
   }
   renderComments(commentsArray.splice(0, COMMENTS_LIMIT));
   const commentsCount = document.querySelectorAll('.social__comment');
   commentsShownCount.textContent = commentsCount.length;
-}
+};
 
-// // Закрывает окно и удаляет обработчики при нажатии на Esc на большом фото
-function onPopupEscKeydown(evt) {
+// Закрывает окно и удаляет обработчики при нажатии на Esc на большом фото
+const onPopupEscKeydown = (evt) => {
   if (isEscPressed(evt)) {
     closePopup();
   }
-}
+};
+
+// // Функция для закрытия большого фото
+const closePopup = () => {
+  document.removeEventListener('keydown', onPopupEscKeydown);
+  popupCloseButton.removeEventListener('click', closePopup);
+  body.classList.remove('modal-open');
+  bigPhoto.classList.add('hidden');
+  commentsArray = [];
+  commentsLoaderButton.removeEventListener('click', onLoadButtonClick);
+};
 
 // // Функция для открытия большого фото
-function openPopup(item) {
+const openPopup = (item) => {
   document.addEventListener('keydown', onPopupEscKeydown);
   popupCloseButton.addEventListener('click', closePopup);
   body.classList.add('modal-open');
@@ -73,32 +75,27 @@ function openPopup(item) {
   popupComments.innerHTML = '';
   commentsArray = item.comments.slice();
   renderComments(commentsArray.splice(0, COMMENTS_LIMIT));
-  // eslint-disable-next-line no-unused-expressions
-  (item.comments.length <= COMMENTS_LIMIT) ? hideLoadButton() : showLoadButton();
-}
-
-// // Функция для закрытия большого фото
-function closePopup () {
-  document.removeEventListener('keydown', onPopupEscKeydown);
-  popupCloseButton.removeEventListener('click', closePopup);
-  body.classList.remove('modal-open');
-  bigPhoto.classList.add('hidden');
-  hideLoadButton();
-  commentsArray = [];
-}
+  if (item.comments.length <= COMMENTS_LIMIT) {
+    commentsLoaderButton.classList.add('hidden');
+    commentsLoaderButton.removeEventListener('click', onLoadButtonClick);
+  } else {
+    commentsLoaderButton.classList.remove('hidden');
+    commentsLoaderButton.addEventListener('click', onLoadButtonClick);
+  }
+};
 
 // // Функция обработчика клика по контейнеру с маленькими фото
-function onPopupClick(evt) {
+const onPopupClick = (evt) => {
   if (evt.target.matches('.picture__img')) {
     const target = evt.target.closest('.picture');
     const itemFromCollection = collectionOfPhotos.find((item) => item.id === Number(target.id));
     openPopup(itemFromCollection);
   }
-}
+};
 
 // -------------Вешаею обработчик клика на контейнер с маленькими фотками
 const wrapperOfPhotos = document.querySelector('.pictures');
 wrapperOfPhotos.addEventListener('click', onPopupClick);
 
 
-export {body};
+export {body, closePopup};
