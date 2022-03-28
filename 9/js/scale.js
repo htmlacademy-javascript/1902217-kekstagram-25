@@ -10,7 +10,7 @@ const SCALE_STEP_MIN = 25;
 const SCALE_STEP_MAX = 100;
 
 // Увеличивает или уменьшает фотографию во вкладке редактирования
-function onScaleControlsClick (evt) {
+const onScaleControlsClick = (evt) => {
   const target = evt.target;
   if (target === scaleControlSmaller && currentStep > SCALE_STEP_MIN) {
     currentStep -= SCALE_CONTROL_STEP;
@@ -20,6 +20,6 @@ function onScaleControlsClick (evt) {
   }
   scaleControlValue.value = `${currentStep}%`;
   currentPicture.style.transform = `scale(${currentStep * 0.01})`;
-}
+};
 
 export {scaleControlsFieldset, onScaleControlsClick};

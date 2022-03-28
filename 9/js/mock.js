@@ -25,25 +25,21 @@ const LIST_OF_COMMENTS = [
 ];
 
 // Создание рандомного объекта комментария
-function createComments(item, index) {
-  return ({
-    id: index + 1,
-    avatar: `img/avatar-${getRandomNumber(1, 6)}.svg`,
-    message: getRandomArrayElement(LIST_OF_COMMENTS),
-    name: getRandomArrayElement(LIST_OF_COMMENTATORS)
-  });
-}
+const createComments = (item, index) => ({
+  id: index + 1,
+  avatar: `img/avatar-${getRandomNumber(1, 6)}.svg`,
+  message: getRandomArrayElement(LIST_OF_COMMENTS),
+  name: getRandomArrayElement(LIST_OF_COMMENTATORS)
+});
 
 // Создание рандомного объекта фотографии
-function createObject(item, index) {
-  return ({
-    id: index + 1,
-    url: `photos/${index + 1}.jpg`,
-    description: DESCRIPTION,
-    likes: getRandomNumber(15, 200),
-    comments: Array.from({ length: 11 }, createComments)
-  });
-}
+const createObject = (item, index) => ({
+  id: index + 1,
+  url: `photos/${index + 1}.jpg`,
+  description: DESCRIPTION,
+  likes: getRandomNumber(15, 200),
+  comments: Array.from({ length: 35 }, createComments)
+});
 
 // Создание массива из заданного количества объектов с фотографиями
 const getUsersPhotos = (count) => Array.from({length: count}, createObject);
@@ -51,7 +47,7 @@ const getUsersPhotos = (count) => Array.from({length: count}, createObject);
 const collectionOfPhotos = getUsersPhotos(25);
 
 // Добавляет на страницу фотографии из массива
-function addUsersPhotos(list) {
+const addUsersPhotos = (list) => {
   const listOfPhotos = document.querySelector('.pictures');
   const template = document.querySelector('#picture').content.querySelector('.picture');
   const fragmentOfPhotos = document.createDocumentFragment();
@@ -66,7 +62,7 @@ function addUsersPhotos(list) {
   });
 
   listOfPhotos.appendChild(fragmentOfPhotos);
-}
+};
 
 addUsersPhotos(collectionOfPhotos);
 
