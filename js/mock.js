@@ -24,6 +24,7 @@ const LIST_OF_COMMENTS = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!',
 ];
 
+// Создание рандомного объекта комментария
 const createComments = (item, index) => ({
   id: index + 1,
   avatar: `img/avatar-${getRandomNumber(1, 6)}.svg`,
@@ -31,24 +32,27 @@ const createComments = (item, index) => ({
   name: getRandomArrayElement(LIST_OF_COMMENTATORS)
 });
 
+// Создание рандомного объекта фотографии
 const createObject = (item, index) => ({
   id: index + 1,
   url: `photos/${index + 1}.jpg`,
   description: DESCRIPTION,
   likes: getRandomNumber(15, 200),
-  comments:  Array.from({length: 11}, createComments)
+  comments: Array.from({ length: 35 }, createComments)
 });
 
+// Создание массива из заданного количества объектов с фотографиями
 const getUsersPhotos = (count) => Array.from({length: count}, createObject);
 
 const collectionOfPhotos = getUsersPhotos(25);
 
+// Добавляет на страницу фотографии из массива
 const addUsersPhotos = (list) => {
   const listOfPhotos = document.querySelector('.pictures');
   const template = document.querySelector('#picture').content.querySelector('.picture');
   const fragmentOfPhotos = document.createDocumentFragment();
 
-  list.forEach(({id, url, likes, comments}) => {
+  list.forEach(({ id, url, likes, comments }) => {
     const photoElement = template.cloneNode(true);
     photoElement.id = id;
     photoElement.querySelector('.picture__img').src = url;
@@ -60,7 +64,6 @@ const addUsersPhotos = (list) => {
   listOfPhotos.appendChild(fragmentOfPhotos);
 };
 
-// -------------Добавляет коллекцию фото на страницу
 addUsersPhotos(collectionOfPhotos);
 
 export {collectionOfPhotos};
