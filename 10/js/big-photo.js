@@ -1,0 +1,102 @@
+import {getData} from './api.js';
+import {onBigPhotoEsc, getItemFromCollection, showAlert} from './utils.js';
+import {body} from './nodes.js';
+
+const wrapperOfPhotos = document.querySelector('.pictures');
+const bigPhoto = document.querySelector('.big-picture');
+const bigPhotoImage = bigPhoto.querySelector('.big-picture__img').querySelector('img');
+const bigPhotoLikesCount = bigPhoto.querySelector('.likes-count');
+const bigPhotoComments = bigPhoto.querySelector('.social__comments');
+const bigPhotoCommentClone = bigPhotoComments.querySelector('.social__comment').cloneNode(true);
+const bigPhotoCommentsCount = bigPhoto.querySelector('.comments-count');
+const bigPhotoDescription = bigPhoto.querySelector('.social__caption');
+const сloseButton = bigPhoto.querySelector('.big-picture__cancel');
+const commentsLoaderButton = bigPhoto.querySelector('.social__comments-loader');
+const commentsShownCount = document.querySelector('.comments-show');
+
+// Переменные для функций комментариев
+let commentsArray = [];
+let commentsArrayFull = [];
+const COMMENTS_LIMIT = 5;
+
+
+// ----------Функция рендера большого фото
+const renderBigPhoto = ({ url, likes, comments, description }) => {
+  bigPhotoImage.src = url;
+  bigPhotoLikesCount.textContent = likes;
+  bigPhotoCommentsCount.textContent = comments.length;
+  bigPhotoDescription.textContent = description;
+};
+
+// Функция рендера комментариев и их размещение под фото
+const renderComments = (array) => {
+  array.forEach(({ avatar, message, name }) => {
+    const popupComment = bigPhotoCommentClone.cloneNode(true);
+    const author = popupComment.querySelector('.social__picture');
+    const commentText = popupComment.querySelector('.social__text');
+    author.src = avatar;
+    author.alt = name;
+    commentText.textContent = message;
+    bigPhotoComments.appendChild(popupComment);
+  });
+};
+
+// Добавляет комментарии по 5 шт, также выводит количество показанных комментариев в поле
+const onLoadButtonClick = () => {
+  if (commentsArray.length <= COMMENTS_LIMIT) {
+    commentsLoaderButton.classList.add('hidden');
+  }
+  renderComments(commentsArray.splice(0, COMMENTS_LIMIT));
+  const commentsCount = document.querySelectorAll('.social__comment');
+  commentsShownCount.textContent = commentsCount.length;
+};
+
+// // Функция для закрытия большого фото
+const closeBigPhoto = () => {
+  document.removeEventListener('keydown', onBigPhotoEsc);
+  сloseButton.removeEventListener('click', closeBigPhoto);
+  body.classList.remove('modal-open');
+  bigPhoto.classList.add('hidden');
+  commentsArray = [];
+  commentsLoaderButton.removeEventListener('click', onLoadButtonClick);
+};
+
+// // Функция для открытия большого фото
+const openBigPhoto = (item) => {
+  document.addEventListener('keydown', onBigPhotoEsc);
+  сloseButton.addEventListener('click', closeBigPhoto);
+  body.classList.add('modal-open');
+  bigPhoto.classList.remove('hidden');
+  renderBigPhoto(item);
+  bigPhotoComments.innerHTML = '';
+  commentsArray = item.comments.slice();
+  commentsArrayFull = commentsArray.splice(0, COMMENTS_LIMIT);
+  commentsShownCount.textContent = commentsArrayFull.length;
+  renderComments(commentsArrayFull);
+  if (item.comments.length <= COMMENTS_LIMIT) {
+    commentsLoaderButton.classList.add('hidden');
+    commentsLoaderButton.removeEventListener('click', onLoadButtonClick);
+  } else {
+    commentsLoaderButton.classList.remove('hidden');
+    commentsLoaderButton.addEventListener('click', onLoadButtonClick);
+  }
+};
+
+// // Функция обработчика клика по контейнеру с маленькими фото
+const onBigPhotoClick = (evt) => {
+  if (evt.target.matches('.picture__img')) {
+    const target = evt.target.closest('.picture');
+    getData(
+      (data) => {
+        openBigPhoto(getItemFromCollection(data, target));
+      },
+      showAlert()
+    );
+  }
+};
+
+// -------------Вешаею обработчик клика на контейнер с маленькими фотками
+wrapperOfPhotos.addEventListener('click', onBigPhotoClick);
+
+
+export {closeBigPhoto};
