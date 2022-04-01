@@ -31,6 +31,7 @@ noUiSlider.create(effectSlider, {
   },
 });
 
+// Определяет какое значение подставлять в фильтр
 const updateSliderValue = (item) => {
   effectSlider.noUiSlider.on('update', () => {
     let itemValue;

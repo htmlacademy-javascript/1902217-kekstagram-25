@@ -46,24 +46,4 @@ const getUsersPhotos = (count) => Array.from({length: count}, createObject);
 
 const collectionOfPhotos = getUsersPhotos(25);
 
-// Добавляет на страницу фотографии из массива
-const addUsersPhotos = (list) => {
-  const listOfPhotos = document.querySelector('.pictures');
-  const template = document.querySelector('#picture').content.querySelector('.picture');
-  const fragmentOfPhotos = document.createDocumentFragment();
-
-  list.forEach(({ id, url, likes, comments }) => {
-    const photoElement = template.cloneNode(true);
-    photoElement.id = id;
-    photoElement.querySelector('.picture__img').src = url;
-    photoElement.querySelector('.picture__likes').textContent = likes;
-    photoElement.querySelector('.picture__comments').textContent = comments.length;
-    fragmentOfPhotos.appendChild(photoElement);
-  });
-
-  listOfPhotos.appendChild(fragmentOfPhotos);
-};
-
-addUsersPhotos(collectionOfPhotos);
-
 export {collectionOfPhotos};
