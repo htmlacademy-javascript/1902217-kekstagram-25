@@ -1,11 +1,12 @@
 import {sendData} from './api.js';
-import {validateHashtags, validateDescriptionLength, onUploadMessageEsc, onUploadMessageMouseClick, blockSubmitButton, unblockSubmitButton} from './utils.js';
-import {body} from './nodes.js';
+import {validateHashtags, validateDescriptionLength, onUploadMessageEsc, onUploadMessageMouseClick} from './utils.js';
+import {body} from './big-photo.js';
+import {closeUploadPhoto} from './upload-photo.js';
 
 const uploadPhotoForm = document.querySelector('.img-upload__form');
 const photoHashtags = uploadPhotoForm.querySelector('.text__hashtags');
 const photoDescription = uploadPhotoForm.querySelector('.text__description');
-const submitButton = document.querySelector('.img-upload__submit');
+const formSubmitButton = document.querySelector('.img-upload__submit');
 const successTemplate = document.querySelector('#success').content.querySelector('.success');
 const errorTemplate = document.querySelector('#error').content.querySelector('.error');
 const success = '.success';
@@ -14,7 +15,7 @@ const error = '.error';
 // -------------Валидация формы
 
 // Настраиваем библиотеку Pristine
-const pristine = new Pristine(uploadPhotoForm, {
+const pristine = window.Pristine(uploadPhotoForm, {
   classTo: 'img-upload__text',
   errorTextParent: 'img-upload__text',
   errorTextTag: 'p',
@@ -39,8 +40,10 @@ const closeUploadMessage = () => {
   window.removeEventListener('click', onUploadMessageMouseClick);
 };
 
-// Создает сообщение об ошибке либо об успехе и вешает обработчики
+// Создает сообщение  и вешает обработчики
 const showUploadMessage = (template, className) => {
+  closeUploadPhoto();
+  formSubmitButton.disabled = false;
   const messageBody = template.cloneNode(true);
   const messageButton = messageBody.querySelector(`${className}__button`);
   messageButton.addEventListener('click', closeUploadMessage);
@@ -49,28 +52,21 @@ const showUploadMessage = (template, className) => {
   window.addEventListener('click', onUploadMessageMouseClick);
 };
 
+// Сообщение об успешной загрузке фотографии
+const succesMessage = () => showUploadMessage(successTemplate, success);
+// Сообщение об ошибке загрузки фотографии
+const errorMessage = () => showUploadMessage(errorTemplate, error);
+
 // Функция отправки формы
-const setUserFormSubmit = (onSucces) => {
+const setUserFormSubmit = (url) => {
   uploadPhotoForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
 
     if (pristine.validate()) {
-      blockSubmitButton(submitButton);
-      sendData(
-        () => {
-          onSucces();
-          unblockSubmitButton(submitButton);
-          showUploadMessage(successTemplate, success);
-        },
-        () => {
-          onSucces();
-          unblockSubmitButton(submitButton);
-          showUploadMessage(errorTemplate, error);
-        },
-        new FormData(evt.target)
-      );
+      formSubmitButton.disabled = true;
+      sendData(url, succesMessage, errorMessage, new FormData(evt.target));
     }
   });
 };
 
-export {uploadPhotoForm, photoHashtags, photoDescription, setUserFormSubmit, closeUploadMessage};
+export {photoHashtags, photoDescription, closeUploadMessage, setUserFormSubmit};

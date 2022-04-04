@@ -3,6 +3,7 @@ const templatePicture = document.querySelector('#picture').content.querySelector
 const fragmentOfPhotos = document.createDocumentFragment();
 
 const addUsersPhotos = (list) => {
+
   list.forEach(({ id, url, likes, comments }) => {
     const photoElement = templatePicture.cloneNode(true);
     photoElement.id = id;

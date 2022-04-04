@@ -1,29 +1,26 @@
-const getDATA = 'https://25.javascript.pages.academy/kekstagram/data';
-const sendDATA = 'https://25.javascript.pages.academy/kekstagram';
-
-const getData = (onSuccess, onFail) => {
+const getData = (url, onSuccess, onFail) => {
   fetch(
-    getDATA
+    url
   )
     .then((response) => {
       if (response.ok) {
         return response.json();
       } else {
-        onFail('Не удалось получить данные с сервера. Попробуйе перезагрузить страницу!');
+        onFail('Не удалось загрузить данные с сервера. Попробуйте перезагрузить страницу!');
       }
     })
     .then((data) => {
       onSuccess(data);
     })
     .catch(() => {
-      onFail('Не удалось получить данные с сервера. Попробуйе перезагрузить страницу!');
+      onFail('Не удалось загрузить данные с сервера. Попробуйте перезагрузить страницу!');
     });
 };
 
 
-const sendData = (onSuccess, onFail, body) => {
+const sendData = (url, onSuccess, onFail, body) => {
   fetch(
-    sendDATA,
+    url,
     {
       method: 'POST',
       body,

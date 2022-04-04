@@ -1,7 +1,6 @@
-import {getData} from './api.js';
-import {onBigPhotoEsc, getItemFromCollection, showAlert} from './utils.js';
-import {body} from './nodes.js';
+import {onBigPhotoEsc, getItemFromCollection} from './utils.js';
 
+const body = document.querySelector('body');
 const wrapperOfPhotos = document.querySelector('.pictures');
 const bigPhoto = document.querySelector('.big-picture');
 const bigPhotoImage = bigPhoto.querySelector('.big-picture__img').querySelector('img');
@@ -18,7 +17,6 @@ const commentsShownCount = document.querySelector('.comments-show');
 let commentsArray = [];
 let commentsArrayFull = [];
 const COMMENTS_LIMIT = 5;
-
 
 // ----------Функция рендера большого фото
 const renderBigPhoto = ({ url, likes, comments, description }) => {
@@ -82,21 +80,14 @@ const openBigPhoto = (item) => {
   }
 };
 
-// // Функция обработчика клика по контейнеру с маленькими фото
-const onBigPhotoClick = (evt) => {
-  if (evt.target.matches('.picture__img')) {
-    const target = evt.target.closest('.picture');
-    getData(
-      (data) => {
-        openBigPhoto(getItemFromCollection(data, target));
-      },
-      showAlert()
-    );
-  }
+const onBigPhotoClick = (array) => {
+  wrapperOfPhotos.addEventListener('click', (evt) => {
+    if (evt.target.matches('.picture__img')) {
+      evt.preventDefault();
+      const target = evt.target.closest('.picture');
+      openBigPhoto(getItemFromCollection(array, target));
+    }
+  });
 };
 
-// -------------Вешаею обработчик клика на контейнер с маленькими фотками
-wrapperOfPhotos.addEventListener('click', onBigPhotoClick);
-
-
-export {closeBigPhoto};
+export {closeBigPhoto, onBigPhotoClick, body};
