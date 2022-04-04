@@ -4,32 +4,15 @@ import {closeUploadMessage} from './form.js';
 
 // Шаблон регулярных выражений для проверки ХешТегов
 const re = /^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/;
+
 // Таймер для сообщения
 const ALERT_SHOW_TIME = 10000;
-
-// Генератор случайных чисел
-const getRandomNumber = (a, b) => {
-  const lower = Math.ceil(Math.min(Math.abs(a), Math.abs(b)));
-  const upper = Math.floor(Math.max(Math.abs(a), Math.abs(b)));
-
-  const result = Math.random() * (upper - lower + 1) + lower;
-
-  return Math.floor(result);
-};
 
 // Проверка длины строки
 const toCheckString = (verifiableString, maxString) => verifiableString.length <= maxString;
 
-// Случаный элемент массива
-const getRandomArrayElement = (elements) => elements[getRandomNumber(0, elements.length - 1)];
-
 // Нажат эскейп
 const isEscPressed = (evt) => evt.key === 'Escape';
-
-// Перехват события
-const stopPropagation = (evt) => {
-  evt.stopPropagation();
-};
 
 // // Закрывают окно и удаляет обработчики при нажатии на Esc
 const onBigPhotoEsc = (evt) => {
@@ -39,7 +22,7 @@ const onBigPhotoEsc = (evt) => {
 };
 
 const onUploadPhotoEsc = (evt) => {
-  if (isEscPressed(evt)) {
+  if (isEscPressed(evt) && !evt.target.matches('.text__hashtags') &&  !evt.target.matches('.text__description')) {
     closeUploadPhoto();
   }
 };
@@ -84,16 +67,6 @@ const validateHashtags = (stringValue) => {
 const DESCRIPTION_MAX_LENGTH = 140;
 const validateDescriptionLength = (value) => toCheckString(value, DESCRIPTION_MAX_LENGTH);
 
-
-// -----------------------Функции блокирования и разблокирования кнопок отправки
-const blockSubmitButton = (button) => {
-  button.disabled = true;
-};
-
-const unblockSubmitButton = (button) => {
-  button.disabled = false;
-};
-
 // Сообщение при неудачной загрузке с сервера
 const showAlert = (message) => {
   const alertContainer = document.createElement('div');
@@ -117,4 +90,31 @@ const showAlert = (message) => {
   }, ALERT_SHOW_TIME);
 };
 
-export {getRandomNumber, getRandomArrayElement, isEscPressed, toCheckString, stopPropagation, onBigPhotoEsc, onUploadPhotoEsc, getItemFromCollection, onUploadMessageEsc, onUploadMessageMouseClick, showAlert, validateHashtags, validateDescriptionLength, blockSubmitButton, unblockSubmitButton};
+// Вззвращает 10 случайных элементов из массива
+const getTenRandomElements = (array) => array.slice().sort(() => Math.random() - 0.5).slice(0, 10);
+
+// Возвращает массив отсортированный по убыванию количества комментариев
+const getElementsByCommentsLength = (array) => {
+  const slicedArray = array.slice();
+  return slicedArray.sort((a, b) => {
+    if (b.comments.length > a.comments.length) {
+      return 1;
+    }
+    if (b.comments.length < a.comments.length) {
+      return -1;
+    }
+    return 0;
+  });
+};
+
+// Функция устранения дребезга
+const debounce = (callback, timeoutDelay) => {
+  let timeoutId;
+
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+};
+
+export {isEscPressed, toCheckString, onBigPhotoEsc, onUploadPhotoEsc, getItemFromCollection, onUploadMessageEsc, onUploadMessageMouseClick, showAlert, validateHashtags, validateDescriptionLength, getTenRandomElements, getElementsByCommentsLength, debounce};
