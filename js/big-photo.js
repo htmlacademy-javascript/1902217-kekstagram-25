@@ -9,13 +9,13 @@ const bigPhotoComments = bigPhoto.querySelector('.social__comments');
 const bigPhotoCommentClone = bigPhotoComments.querySelector('.social__comment').cloneNode(true);
 const bigPhotoCommentsCount = bigPhoto.querySelector('.comments-count');
 const bigPhotoDescription = bigPhoto.querySelector('.social__caption');
-const сloseButton = bigPhoto.querySelector('.big-picture__cancel');
+const closeButton = bigPhoto.querySelector('.big-picture__cancel');
 const commentsLoaderButton = bigPhoto.querySelector('.social__comments-loader');
 const commentsShownCount = document.querySelector('.comments-show');
 
 // Переменные для функций комментариев
-let commentsArray = [];
-let commentsArrayFull = [];
+let clonedComments = [];
+let addedComments = [];
 const COMMENTS_LIMIT = 5;
 
 // ----------Функция рендера большого фото
@@ -41,10 +41,10 @@ const renderComments = (array) => {
 
 // Добавляет комментарии по 5 шт, также выводит количество показанных комментариев в поле
 const onLoadButtonClick = () => {
-  if (commentsArray.length <= COMMENTS_LIMIT) {
+  if (clonedComments.length <= COMMENTS_LIMIT) {
     commentsLoaderButton.classList.add('hidden');
   }
-  renderComments(commentsArray.splice(0, COMMENTS_LIMIT));
+  renderComments(clonedComments.splice(0, COMMENTS_LIMIT));
   const commentsCount = document.querySelectorAll('.social__comment');
   commentsShownCount.textContent = commentsCount.length;
 };
@@ -52,25 +52,25 @@ const onLoadButtonClick = () => {
 // // Функция для закрытия большого фото
 const closeBigPhoto = () => {
   document.removeEventListener('keydown', onBigPhotoEsc);
-  сloseButton.removeEventListener('click', closeBigPhoto);
+  closeButton.removeEventListener('click', closeBigPhoto);
   body.classList.remove('modal-open');
   bigPhoto.classList.add('hidden');
-  commentsArray = [];
+  clonedComments = [];
   commentsLoaderButton.removeEventListener('click', onLoadButtonClick);
 };
 
 // // Функция для открытия большого фото
 const openBigPhoto = (item) => {
   document.addEventListener('keydown', onBigPhotoEsc);
-  сloseButton.addEventListener('click', closeBigPhoto);
+  closeButton.addEventListener('click', closeBigPhoto);
   body.classList.add('modal-open');
   bigPhoto.classList.remove('hidden');
   renderBigPhoto(item);
   bigPhotoComments.innerHTML = '';
-  commentsArray = item.comments.slice();
-  commentsArrayFull = commentsArray.splice(0, COMMENTS_LIMIT);
-  commentsShownCount.textContent = commentsArrayFull.length;
-  renderComments(commentsArrayFull);
+  clonedComments = item.comments.slice();
+  addedComments = clonedComments.splice(0, COMMENTS_LIMIT);
+  commentsShownCount.textContent = addedComments.length;
+  renderComments(addedComments);
   if (item.comments.length <= COMMENTS_LIMIT) {
     commentsLoaderButton.classList.add('hidden');
     commentsLoaderButton.removeEventListener('click', onLoadButtonClick);

@@ -8,7 +8,7 @@ const uploadFileChooser = document.querySelector('#upload-file');
 const uploadPhotoPreview = document.querySelector('#img-upload__preview-picture');
 const uploadPhoto = document.querySelector('.img-upload__overlay');
 const uploadPhotoCloseButton = uploadPhoto.querySelector('#upload-cancel');
-const FILE_TYPES = ['jpg', 'jpeg', 'png'];
+const APPROVED_FILES = ['jpg', 'jpeg', 'png'];
 
 // Функция которая закрывает модальное окно
 const closeUploadPhoto = () => {
@@ -36,7 +36,7 @@ const onUploadFileChooserClick = () => {
   const uploadFile = uploadFileChooser.files[0];
   const uploadFileName = uploadFile.name.toLowerCase();
 
-  const matches = FILE_TYPES.some((it) => uploadFileName.endsWith(it));
+  const matches = APPROVED_FILES.some((it) => uploadFileName.endsWith(it));
   if (matches) {
     uploadPhotoPreview.src = URL.createObjectURL(uploadFile);
     openUploadPhoto();
