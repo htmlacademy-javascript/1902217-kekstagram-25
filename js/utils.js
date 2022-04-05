@@ -9,8 +9,6 @@ const MAX_ARRAY_LENGTH = 5;
 // Шаблон регулярных выражений для проверки ХешТегов
 const re = /^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/;
 
-
-
 // Проверка длины строки
 const toCheckString = (verifiableString, maxString) => verifiableString.length <= maxString;
 
