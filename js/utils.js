@@ -2,11 +2,14 @@ import {closeBigPhoto} from './big-photo.js';
 import {closeUploadPhoto} from './upload-photo.js';
 import {closeUploadMessage} from './form.js';
 
+// Таймер для сообщения
+const ALERT_SHOW_TIME = 10000;
+// Максимальная длина массива
+const MAX_ARRAY_LENGTH = 5;
 // Шаблон регулярных выражений для проверки ХешТегов
 const re = /^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/;
 
-// Таймер для сообщения
-const ALERT_SHOW_TIME = 10000;
+
 
 // Проверка длины строки
 const toCheckString = (verifiableString, maxString) => verifiableString.length <= maxString;
@@ -54,7 +57,6 @@ const checkHashtagWriting = (array) => array.every((item) => re.test(item));
 const checkHashtagRepeat = (array) => array.every((item) => array.indexOf(item) === array.lastIndexOf(item));
 
 // Функция проверяет длину массива
-const MAX_ARRAY_LENGTH = 5;
 const checkArrayLength = (array) => array.length <= MAX_ARRAY_LENGTH;
 
 // Функция объединяющая все проверки валидации ХэшТег
@@ -70,11 +72,11 @@ const validateDescriptionLength = (value) => toCheckString(value, DESCRIPTION_MA
 // Сообщение при неудачной загрузке с сервера
 const showAlert = (message) => {
   const alertContainer = document.createElement('div');
-  alertContainer.style.zIndex = 100;
+  alertContainer.style.zIndex = '100';
   alertContainer.style.position = 'absolute';
-  alertContainer.style.left = 0;
-  alertContainer.style.bottom = 10;
-  alertContainer.style.right = 0;
+  alertContainer.style.left = '0';
+  alertContainer.style.bottom = '10';
+  alertContainer.style.right = '0';
   alertContainer.style.padding = '10px 3px';
   alertContainer.style.fontSize = '20px';
   alertContainer.style.color = 'yellow';
