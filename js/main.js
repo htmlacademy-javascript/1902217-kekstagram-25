@@ -13,7 +13,7 @@ const urlKekstagramDataSend = 'https://25.javascript.pages.academy/kekstagram';
 // Задержка между переключением фильтров
 const FILTER_RENDER_DELAY = 500;
 
-// Функции добавления фото на сайт и рендера большого фото используют данные полученные с сервера
+// Функции добавления фото на сайт и рендера большого фото, а также фильтр используют данные полученные с сервера
 getData(
   urlKekstagramDataGet,
   (data) => {
@@ -21,7 +21,7 @@ getData(
     onBigPhotoClick(data);
     addFilters(data, debounce(addUsersPhotos, FILTER_RENDER_DELAY));
   },
-  showAlert
+  () => showAlert('Не удалось загрузить данные с сервера. Попробуйте обновить страницу!')
 );
 
 // Функция отправляет форму с фотографией и описанием

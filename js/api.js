@@ -6,14 +6,14 @@ const getData = (url, onSuccess, onFail) => {
       if (response.ok) {
         return response.json();
       } else {
-        onFail('Не удалось загрузить данные с сервера. Попробуйте перезагрузить страницу!');
+        onFail();
       }
     })
     .then((data) => {
       onSuccess(data);
     })
     .catch(() => {
-      onFail('Не удалось загрузить данные с сервера. Попробуйте перезагрузить страницу!');
+      onFail();
     });
 };
 
@@ -30,11 +30,11 @@ const sendData = (url, onSuccess, onFail, body) => {
       if (response.ok) {
         onSuccess();
       } else {
-        onFail('Не удалось отправить форму. Попробуйте ещё раз');
+        onFail();
       }
     })
     .catch(() => {
-      onFail('Не удалось отправить форму. Попробуйте ещё раз');
+      onFail();
     });
 };
 

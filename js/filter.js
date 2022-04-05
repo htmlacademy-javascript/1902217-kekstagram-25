@@ -13,8 +13,7 @@ const addFilters = (array, cb) => {
   filterForm.addEventListener('click', (evt) => {
     const target = evt.target;
 
-    if (target.matches('.img-filters__button')) {
-      document.querySelectorAll('.picture').forEach((element) => element.remove());
+    if (target.matches('.img-filters__button') && !target.matches('.img-filters__button--active')) {
       allFilters.forEach((item) => item.classList.remove('img-filters__button--active'));
       target.classList.add('img-filters__button--active');
 
