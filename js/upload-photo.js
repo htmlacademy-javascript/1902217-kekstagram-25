@@ -4,15 +4,17 @@ import {scaleControlsFieldset, onScaleControlsClick} from './scale.js';
 import {effectsList, onEffectsListClick} from './effects.js';
 import {photoHashtags, photoDescription} from './form.js';
 
-const uploadButton = document.querySelector('#upload-file');
+const uploadFileChooser = document.querySelector('#upload-file');
+const uploadPhotoPreview = document.querySelector('#img-upload__preview-picture');
 const uploadPhoto = document.querySelector('.img-upload__overlay');
 const uploadPhotoCloseButton = uploadPhoto.querySelector('#upload-cancel');
+const FILE_TYPES = ['jpg', 'jpeg', 'png'];
 
 // Функция которая закрывает модальное окно
 const closeUploadPhoto = () => {
   uploadPhoto.classList.add('hidden');
   body.classList.remove('modal-open');
-  uploadButton.value = '';
+  uploadFileChooser.value = '';
   photoHashtags.value = '';
   photoDescription.value = '';
   document.removeEventListener('keydown', onUploadPhotoEsc);
@@ -30,7 +32,18 @@ const openUploadPhoto = () => {
   effectsList.addEventListener('change', onEffectsListClick);
 };
 
+const onUploadFileChooserClick = () => {
+  const uploadFile = uploadFileChooser.files[0];
+  const uploadFileName = uploadFile.name.toLowerCase();
+
+  const matches = FILE_TYPES.some((it) => uploadFileName.endsWith(it));
+  if (matches) {
+    uploadPhotoPreview.src = URL.createObjectURL(uploadFile);
+    openUploadPhoto();
+  }
+};
+
 // Обработчик события при клике по кнопке загрузки фото
-uploadButton.addEventListener('change', openUploadPhoto);
+uploadFileChooser.addEventListener('change', onUploadFileChooserClick);
 
 export {closeUploadPhoto};
